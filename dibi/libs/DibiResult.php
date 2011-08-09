@@ -54,6 +54,9 @@ class DibiResult extends DibiObject implements IDataSource
 
 	/** @var string  returned object class */
 	private $rowClass = 'DibiRow';
+	
+	/** @var callback to return object factory */
+	private $rowFactory;
 
 	/** @var string  date-time format */
 	private $dateFormat = '';
@@ -211,7 +214,30 @@ class DibiResult extends DibiObject implements IDataSource
 		return $this->rowClass;
 	}
 
-
+/**
+	 * Sets factory for fetched objects
+	 * 
+	 * @param  callback
+	 * @return DibiResult  provides a fluent interface
+	 */
+	public function setRowFactory($callback) {
+		$this->rowFactory = $callback;
+		return $this;
+	}
+	
+	/**
+	 * Creates object for fetched data
+	 * 
+	 * @param DibiRow $data
+	 * @return mixed data holder class 
+	 */
+	protected function createRowObject($data) {
+		if(isset($this->rowFactory)) {
+			$factory = $this->rowFactory;
+			return $factory($data);
+		} else
+			return new $this->rowClass($data);
+	}
 
 	/**
 	 * Fetches the row at current position, process optional type conversion.
@@ -234,7 +260,7 @@ class DibiResult extends DibiObject implements IDataSource
 			}
 		}
 
-		return new $this->rowClass($row);
+		return $this->createRowObject($row);
 	}
 
 
