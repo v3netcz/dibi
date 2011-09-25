@@ -22,7 +22,7 @@
  *
  * @author     David Grudl
  */
-class DibiProfiler extends DibiObject implements IDibiProfiler, IBarPanel
+class DibiProfiler extends DibiObject implements IDibiProfiler, Nette\Diagnostics\IBarPanel
 {
 	/** maximum number of rows */
 	static public $maxQueries = 30;
