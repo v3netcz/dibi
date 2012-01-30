@@ -20,7 +20,9 @@ dibi::connect(array(
 $res = dibi::query('SELECT * FROM [customers]');
 
 $res->setType('customer_id', Dibi::INTEGER)
-	->setType('added', Dibi::DATETIME, 'H:i j.n.Y');
+	->setType('added', Dibi::DATETIME)
+	->setFormat(dibi::DATETIME, 'Y-m-d H:i:s');
+
 
 Debugger::dump( $res->fetch() );
 // outputs:
@@ -34,8 +36,6 @@ Debugger::dump( $res->fetch() );
 
 // using auto-detection (works well with MySQL or other strictly typed databases)
 $res = dibi::query('SELECT * FROM [customers]');
-
-$res->detectTypes();
 
 Debugger::dump( $res->fetch() );
 // outputs:

@@ -3,12 +3,10 @@
 /**
  * This file is part of the "dibi" - smart database abstraction layer.
  *
- * Copyright (c) 2005, 2010 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2005 David Grudl (http://davidgrudl.com)
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- *
- * @package    dibi\drivers
  */
 
 
@@ -33,6 +31,9 @@ class DibiOdbcDriver extends DibiObject implements IDibiDriver, IDibiResultDrive
 
 	/** @var resource  Resultset resource */
 	private $resultSet;
+
+	/** @var bool */
+	private $autoFree = TRUE;
 
 	/** @var int|FALSE  Affected rows */
 	private $affectedRows = FALSE;
@@ -202,7 +203,7 @@ class DibiOdbcDriver extends DibiObject implements IDibiDriver, IDibiResultDrive
 	 */
 	public function getResource()
 	{
-		return $this->connection;
+		return is_resource($this->connection) ? $this->connection : NULL;
 	}
 
 
@@ -329,7 +330,7 @@ class DibiOdbcDriver extends DibiObject implements IDibiDriver, IDibiResultDrive
 	 */
 	public function __destruct()
 	{
-		$this->resultSet && @$this->free();
+		$this->autoFree && $this->getResultResource() && $this->free();
 	}
 
 
@@ -419,7 +420,8 @@ class DibiOdbcDriver extends DibiObject implements IDibiDriver, IDibiResultDrive
 	 */
 	public function getResultResource()
 	{
-		return $this->resultSet;
+		$this->autoFree = FALSE;
+		return is_resource($this->resultSet) ? $this->resultSet : NULL;
 	}
 
 

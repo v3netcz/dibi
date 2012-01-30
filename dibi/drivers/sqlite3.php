@@ -3,12 +3,10 @@
 /**
  * This file is part of the "dibi" - smart database abstraction layer.
  *
- * Copyright (c) 2005, 2010 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2005 David Grudl (http://davidgrudl.com)
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- *
- * @package    dibi\drivers
  */
 
 
@@ -37,6 +35,9 @@ class DibiSqlite3Driver extends DibiObject implements IDibiDriver, IDibiResultDr
 
 	/** @var SQLite3Result  Resultset resource */
 	private $resultSet;
+
+	/** @var bool */
+	private $autoFree = TRUE;
 
 	/** @var string  Date and datetime format */
 	private $fmtDate, $fmtDateTime;
@@ -319,7 +320,7 @@ class DibiSqlite3Driver extends DibiObject implements IDibiDriver, IDibiResultDr
 	 */
 	public function __destruct()
 	{
-		$this->resultSet && @$this->free();
+		$this->autoFree && $this->resultSet && @$this->free();
 	}
 
 
@@ -413,6 +414,7 @@ class DibiSqlite3Driver extends DibiObject implements IDibiDriver, IDibiResultDr
 	 */
 	public function getResultResource()
 	{
+		$this->autoFree = FALSE;
 		return $this->resultSet;
 	}
 

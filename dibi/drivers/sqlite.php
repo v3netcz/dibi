@@ -3,12 +3,10 @@
 /**
  * This file is part of the "dibi" - smart database abstraction layer.
  *
- * Copyright (c) 2005, 2010 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2005 David Grudl (http://davidgrudl.com)
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- *
- * @package    dibi\drivers
  */
 
 
@@ -204,7 +202,7 @@ class DibiSqliteDriver extends DibiObject implements IDibiDriver, IDibiResultDri
 	 */
 	public function getResource()
 	{
-		return $this->connection;
+		return is_resource($this->connection) ? $this->connection : NULL;
 	}
 
 
@@ -414,7 +412,7 @@ class DibiSqliteDriver extends DibiObject implements IDibiDriver, IDibiResultDri
 	 */
 	public function getResultResource()
 	{
-		return $this->resultSet;
+		return is_resource($this->resultSet) ? $this->resultSet : NULL;
 	}
 
 

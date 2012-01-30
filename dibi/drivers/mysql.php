@@ -3,12 +3,10 @@
 /**
  * This file is part of the "dibi" - smart database abstraction layer.
  *
- * Copyright (c) 2005, 2010 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2005 David Grudl (http://davidgrudl.com)
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- *
- * @package    dibi\drivers
  */
 
 
@@ -47,6 +45,9 @@ class DibiMySqlDriver extends DibiObject implements IDibiDriver, IDibiResultDriv
 
 	/** @var resource  Resultset resource */
 	private $resultSet;
+
+	/** @var bool */
+	private $autoFree = TRUE;
 
 	/** @var bool  Is buffered (seekable and countable)? */
 	private $buffered;
@@ -257,7 +258,7 @@ class DibiMySqlDriver extends DibiObject implements IDibiDriver, IDibiResultDriv
 	 */
 	public function getResource()
 	{
-		return $this->connection;
+		return is_resource($this->connection) ? $this->connection : NULL;
 	}
 
 
@@ -302,9 +303,15 @@ class DibiMySqlDriver extends DibiObject implements IDibiDriver, IDibiResultDriv
 	{
 		switch ($type) {
 		case dibi::TEXT:
+			if (!is_resource($this->connection)) {
+				throw new DibiException('Lost connection to server.');
+			}
 			return "'" . mysql_real_escape_string($value, $this->connection) . "'";
 
 		case dibi::BINARY:
+			if (!is_resource($this->connection)) {
+				throw new DibiException('Lost connection to server.');
+			}
 			return "_binary'" . mysql_real_escape_string($value, $this->connection) . "'";
 
 		case dibi::IDENTIFIER:
@@ -386,7 +393,7 @@ class DibiMySqlDriver extends DibiObject implements IDibiDriver, IDibiResultDriv
 	 */
 	public function __destruct()
 	{
-		$this->resultSet && @$this->free();
+		$this->autoFree && $this->getResultResource() && $this->free();
 	}
 
 
@@ -475,7 +482,8 @@ class DibiMySqlDriver extends DibiObject implements IDibiDriver, IDibiResultDriv
 	 */
 	public function getResultResource()
 	{
-		return $this->resultSet;
+		$this->autoFree = FALSE;
+		return is_resource($this->resultSet) ? $this->resultSet : NULL;
 	}
 
 }

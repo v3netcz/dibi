@@ -3,21 +3,11 @@
 /**
  * This file is part of the "dibi" - smart database abstraction layer.
  *
- * Copyright (c) 2005, 2010 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2005 David Grudl (http://davidgrudl.com)
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- *
- * @package    dibi\exceptions
  */
-
-
-
-class DibiNotImplementedException extends LogicException
-{}
-
-class DibiNotSupportedException extends LogicException
-{}
 
 
 
@@ -25,6 +15,7 @@ class DibiNotSupportedException extends LogicException
  * dibi common exception.
  *
  * @author     David Grudl
+ * @package    dibi
  */
 class DibiException extends Exception
 {
@@ -42,7 +33,6 @@ class DibiException extends Exception
 	{
 		parent::__construct($message, (int) $code);
 		$this->sql = $sql;
-		// TODO: add $profiler->exception($this);
 	}
 
 
@@ -74,6 +64,7 @@ class DibiException extends Exception
  * database server exception.
  *
  * @author     David Grudl
+ * @package    dibi
  */
 class DibiDriverException extends DibiException
 {
@@ -139,6 +130,7 @@ class DibiDriverException extends DibiException
  * PCRE exception.
  *
  * @author     David Grudl
+ * @package    dibi
  */
 class DibiPcreException extends Exception {
 
@@ -155,3 +147,19 @@ class DibiPcreException extends Exception {
 		parent::__construct(str_replace('%msg', isset($messages[$code]) ? $messages[$code] : 'Unknown error', $message), $code);
 	}
 }
+
+
+
+/**
+ * @package    dibi
+ */
+class DibiNotImplementedException extends DibiException
+{}
+
+
+
+/**
+ * @package    dibi
+ */
+class DibiNotSupportedException extends DibiException
+{}

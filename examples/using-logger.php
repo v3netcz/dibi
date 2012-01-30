@@ -13,21 +13,21 @@ date_default_timezone_set('Europe/Prague');
 dibi::connect(array(
 	'driver'   => 'sqlite',
 	'database' => 'data/sample.sdb',
-	'profiler' => TRUE,
+	// enable query logging to this file
+	'profiler' => array(
+		'run' => TRUE,
+		'file' => 'data/log.sql',
+	),
 ));
-
-
-// enable query logging to this file
-dibi::getProfiler()->setFile('data/log.sql');
 
 
 
 try {
-	$res = dibi::query('SELECT * FROM [customers] WHERE [customer_id] = %i', 1);
+	$res = dibi::query('SELECT * FROM [customers] WHERE [customer_id] = ?', 1);
 
-	$res = dibi::query('SELECT * FROM [customers] WHERE [customer_id] < %i', 5);
+	$res = dibi::query('SELECT * FROM [customers] WHERE [customer_id] < ?', 5);
 
-	$res = dibi::query('SELECT FROM [customers] WHERE [customer_id] < %i', 38);
+	$res = dibi::query('SELECT FROM [customers] WHERE [customer_id] < ?', 38);
 
 } catch (DibiException $e) {
 	echo '<p>', get_class($e), ': ', $e->getMessage(), '</p>';
