@@ -50,7 +50,7 @@ class DibiNettePanel extends DibiObject implements IBarPanel
 	public function register(DibiConnection $connection)
 	{
 		if (is_callable('Nette\Diagnostics\Debugger::enable')) {
-			class_alias('Nette\Diagnostics\Debugger', 'NDebugger'); // PHP 5.2 code compatibility
+			//class_alias('Nette\Diagnostics\Debugger', 'NDebugger'); // PHP 5.2 code compatibility
 		}
 		if (is_callable('NDebugger::enable')) {
 			NDebugger::$bar && NDebugger::$bar->addPanel($this);
